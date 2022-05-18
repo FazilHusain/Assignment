@@ -1,24 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect } from "react";
+import Spinner from "./Components/Spinner";
+import Userdata from "./Components/Userdata";
 
 function App() {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const getUsers = async () => {
+    const res = await fetch("https://jsonplaceholder.typicode.com/users");
+    setData(await res.json());
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    getUsers();
+  }, []);
+
+  if (loading) {
+    return <Spinner />;
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Userdata data={data} setData={setData} />
+    </>
   );
 }
 
